@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { auth } from '@/lib/auth';
 import Image from 'next/image';
 import { UserSettingsPopup } from './UserSettingsPopup';
 import {
@@ -16,37 +15,37 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { handleSignOut } from '../actions';
 import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export function User() {
   const [session, setSession] = useState<any>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
-    async function fetchSession() {
-      const sessionData = await auth();
-      setSession(sessionData);
+    async function getSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('Fetched session data:', session);
+      setSession(session);
     }
-    fetchSession();
-  }, []);
+    getSession();
 
-  useEffect(() => {
-    const handleHashChange = () => {
-      setIsSettingsOpen(window.location.hash === '#settings');
-    };
-
-    // Check hash on initial load
-    handleHashChange();
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      authListener.subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase]);
 
   const user = session?.user;
+  console.log('User object:', user);
+
+  const userImage = user?.image || user?.user_metadata?.avatar_url || '/placeholder-user.jpg';
+  const userEmail = user?.email || '';
+  console.log('User email:', userEmail);
 
   const toggleSettings = () => {
     const newState = !isSettingsOpen;
@@ -56,7 +55,6 @@ export function User() {
     } else {
       window.history.pushState("", document.title, window.location.pathname + window.location.search);
     }
-    console.log('Settings toggled:', newState);
   };
 
   return (
@@ -69,7 +67,7 @@ export function User() {
             className="overflow-hidden rounded-full"
           >
             <Image
-              src={user?.image ?? '/placeholder-user.jpg'}
+              src={userImage}
               width={36}
               height={36}
               alt="Avatar"
@@ -78,8 +76,19 @@ export function User() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
-          <DropdownMenuSeparator />
+          {user ? (
+            <>
+              <DropdownMenuLabel className="font-normal">
+                <div className="flex flex-col space-y-1">
+                  <p className="text-sm font-medium leading-none">User Email:</p>
+                  <p className="text-xs leading-none text-muted-foreground">{userEmail || 'No email available'}</p>
+                </div>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+            </>
+          ) : (
+            <DropdownMenuLabel>Not signed in</DropdownMenuLabel>
+          )}
           <DropdownMenuItem onSelect={toggleSettings}>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -99,9 +108,9 @@ export function User() {
       {isSettingsOpen && user && (
         <UserSettingsPopup
           user={{
-            name: user.name ?? '',
-            email: user.email ?? '',
-            image: user.image ?? '/placeholder-user.jpg'
+            name: user.name || '',
+            email: userEmail,
+            image: userImage
           }}
           onClose={toggleSettings}
         />

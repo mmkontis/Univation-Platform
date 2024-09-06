@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Home,
   LineChart,
@@ -78,12 +79,16 @@ function DesktopNav() {
       <nav className="flex flex-col gap-4 p-4">
         <Link
           href="/"
-          className="flex items-center gap-2 px-2 py-1"
+          className="flex items-center justify-center w-full px-2 py-1 mt-10" // Added mt-10 for 40px margin top
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-            <VercelLogo className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="font-semibold text-lg">Unistudents</span>
+          <Image
+            src="/logos/univation-blue-logo.svg"
+            alt="Univation Blue Logo"
+            width={240}
+            height={42}
+            priority
+            className="w-full h-auto"
+          />
         </Link>
 
         <div className="mt-4">
@@ -115,7 +120,7 @@ function DesktopNav() {
           <NavItem href="#" label="Available Talent">
             <Users className="h-5 w-5 mr-3" />
             Available Talent
-            <Badge variant="success" className="ml-auto">Soon</Badge>
+            <Badge variant="outline" className="ml-auto">Soon</Badge>
           </NavItem>
         </div>
 
@@ -229,7 +234,7 @@ function MobileNav() {
             <Link href="#" className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
               <Users className="h-5 w-5" />
               Available Talent
-              <Badge variant="success" className="ml-auto">Soon</Badge>
+              <Badge variant="outline" className="ml-auto">Soon</Badge>
             </Link>
           </div>
 
