@@ -1,64 +1,83 @@
-<div align="center"><strong>12Next.js 14 Admin Dashboard Template</strong></div>
-<div align="center">Built with the Next.js App Router</div>
-<br />
 <div align="center">
-<a href="https://next-admin-dash.vercel.app/">Demo</a>
-<span> · </span>
-<a href="https://vercel.com/templates/next.js/admin-dashboard-tailwind-postgres-react-nextjs">Clone & Deploy</a>
-<span>
+  <img src="path/to/theunivation-logo.png" alt="Theunivation Logo" width="200">
 </div>
 
-## Overview
+<div align="center"><strong>Theunivation Admin Dashboard</strong></div>
+<div align="center">Empowering Innovation in Education</div>
+<br />
+<div align="center">
+<a href="https://theunivation.com">Website</a>
+<span> · </span>
+<a href="https://admin.theunivation.com">Admin Dashboard</a>
+</div>
 
-This is a starter template using the following stack:
+## About Theunivation
 
-- Framework - [Next.js (App Router)](https://nextjs.org)
+Theunivation is a cutting-edge educational technology platform that bridges the gap between academia and industry. Our mission is to revolutionize the way students learn and prepare for their careers by providing:
+
+- Real-world project experiences
+- Mentorship from industry experts
+- Skill-based learning paths
+- Collaboration opportunities with peers and professionals
+
+## Admin Dashboard Overview
+
+This admin dashboard is built using a modern tech stack to manage Theunivation's operations efficiently:
+
+- Framework - [Next.js 14 (App Router)](https://nextjs.org)
 - Language - [TypeScript](https://www.typescriptlang.org)
 - Auth - [Auth.js](https://authjs.dev)
-- Database - [Postgres](https://vercel.com/postgres)
-- Deployment - [Vercel](https://vercel.com/docs/concepts/next.js/overview)
+- Database - [Supabase](https://supabase.com)
+- Deployment - [Vercel](https://vercel.com)
 - Styling - [Tailwind CSS](https://tailwindcss.com)
 - Components - [Shadcn UI](https://ui.shadcn.com/)
 - Analytics - [Vercel Analytics](https://vercel.com/analytics)
 - Formatting - [Prettier](https://prettier.io)
 
-This template uses the new Next.js App Router. This includes support for enhanced layouts, colocation of components, tests, and styles, component-level data fetching, and more.
+## Features
+
+- User Management: Manage students, mentors, and administrators
+- Project Tracking: Monitor ongoing projects and collaborations
+- Performance Analytics: Track student progress and engagement
+- Content Management: Curate and organize learning materials
+- Mentorship Matching: Facilitate connections between students and industry mentors
 
 ## Getting Started
 
-During the deployment, Vercel will prompt you to create a new Postgres database. This will add the necessary environment variables to your project.
+1. Clone the repository:
+   ```
+   git clone https://github.com/theunivation/admin-dashboard.git
+   cd admin-dashboard
+   ```
 
-Inside the Vercel Postgres dashboard, create a table based on the schema defined in this repository.
+2. Install dependencies:
+   ```
+   pnpm install
+   ```
 
-```
-CREATE TYPE status AS ENUM ('active', 'inactive', 'archived');
+3. Set up environment variables:
+   - Copy `.env.example` to `.env.local`
+   - Update the values with your Supabase and Google OAuth credentials
 
-CREATE TABLE products (
-  id SERIAL PRIMARY KEY,
-  image_url TEXT NOT NULL,
-  name TEXT NOT NULL,
-  status status NOT NULL,
-  price NUMERIC(10, 2) NOT NULL,
-  stock INTEGER NOT NULL,
-  available_at TIMESTAMP NOT NULL
-);
-```
+4. Run the development server:
+   ```
+   pnpm dev
+   ```
 
-Then, uncomment `app/api/seed.ts` and hit `http://localhost:3000/api/seed` to seed the database with products.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-Next, copy the `.env.example` file to `.env` and update the values. Follow the instructions in the `.env.example` file to set up your GitHub OAuth application.
+## Deployment
 
-```bash
-npm i -g vercel
-vercel link
-vercel env pull
-```
+The admin dashboard is automatically deployed to Vercel. Any pushes to the `main` branch will trigger a new deployment.
 
-Finally, run the following commands to start the development server:
+## Contributing
 
-```
-pnpm install
-pnpm dev
-```
+We welcome contributions from the community. Please read our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get started.
 
-You should now be able to access the application at http://localhost:3000.
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+<div align="center">
+  <img src="path/to/partner-logos.png" alt="Partner Logos" width="600">
+</div>
