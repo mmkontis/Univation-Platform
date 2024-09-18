@@ -14,9 +14,9 @@ export default async function CatchAll() {
       .eq('id', session.user.id)
       .single()
 
-    if (!userData?.onboarding_completed) {
-      redirect('/onboarding')
-    }
+    // if (!userData?.onboarding_completed) {
+    //   redirect('/onboarding')
+    // }
   }
 
   // If we get here, either there's no session or onboarding is completed

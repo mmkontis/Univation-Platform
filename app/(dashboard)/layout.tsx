@@ -1,3 +1,9 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -52,6 +58,37 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    async function checkOnboarding() {
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session:', session);
+
+      if (session) {
+        const { data: userData, error } = await supabase
+          .from('users')
+          .select('onboarding_completed')
+          .eq('id', session.user.id)
+          .single()
+
+        console.log('User data:', userData);
+        console.log('Error:', error);
+
+        if (!userData?.onboarding_completed) {
+          console.log('Redirecting to onboarding');
+          // router.push('/onboarding');
+        }
+      } else {
+        console.log('No session, redirecting to login');
+        router.push('/login');
+      }
+    }
+
+    checkOnboarding();
+  }, [router, supabase]);
+
   return (
     <Providers>
       <main className="flex min-h-screen w-full flex-col bg-muted/40">

@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
-import { handleSignOut } from '../actions';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
@@ -45,7 +44,9 @@ export function User() {
 
   const userImage = user?.image || user?.user_metadata?.avatar_url || '/placeholder-user.jpg';
   const userEmail = user?.email || '';
-  console.log('User email:', userEmail);
+  const firstName = user?.user_metadata?.first_name || 'N/A';
+  const lastName = user?.user_metadata?.last_name || 'N/A';
+  const onboardingStatus = user?.user_metadata?.onboarding_completed ? 'Completed' : 'Not Completed';
 
   const toggleSettings = () => {
     const newState = !isSettingsOpen;
@@ -54,6 +55,15 @@ export function User() {
       window.location.hash = 'settings';
     } else {
       window.history.pushState("", document.title, window.location.pathname + window.location.search);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error signing out:', error);
+    } else {
+      router.push('/login'); // Redirect to login page after sign out
     }
   };
 
@@ -80,8 +90,11 @@ export function User() {
             <>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">User Email:</p>
-                  <p className="text-xs leading-none text-muted-foreground">{userEmail || 'No email available'}</p>
+                  <p className="text-sm font-medium leading-none">User Info:</p>
+                  <p className="text-xs leading-none text-muted-foreground">Email: {userEmail}</p>
+                  <p className="text-xs leading-none text-muted-foreground">First Name: {firstName}</p>
+                  <p className="text-xs leading-none text-muted-foreground">Last Name: {lastName}</p>
+                  <p className="text-xs leading-none text-muted-foreground">Onboarding: {onboardingStatus}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -93,10 +106,8 @@ export function User() {
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
           {user ? (
-            <DropdownMenuItem>
-              <form action={handleSignOut}>
-                <button type="submit">Sign Out</button>
-              </form>
+            <DropdownMenuItem onSelect={handleSignOut}>
+              Sign Out
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem>

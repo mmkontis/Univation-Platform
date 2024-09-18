@@ -2,12 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { AnimatedGradient } from '@/lib/supabase_db/AnimatedGradient'; // Add this import
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function ClientLoginPage() {
   const [email, setEmail] = useState('');
@@ -45,7 +45,13 @@ export default function ClientLoginPage() {
   };
 
   const handleLinkedInSignIn = async () => {
-    // Implement LinkedIn sign-in logic here
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'linkedin',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) console.error('Error signing in with LinkedIn:', error);
   };
 
   return (
@@ -90,7 +96,7 @@ export default function ClientLoginPage() {
           </div>
         </div>
       </div>
-      <div className="w-1/2 bg-blue-600 text-white p-16 flex flex-col justify-center">
+      <AnimatedGradient className="w-1/2 text-white p-16 flex flex-col justify-center">
         <h1 className="text-5xl font-bold mb-8">Attract the right talent, faster, smarter.</h1>
         <ul className="space-y-4 text-lg">
           <li className="flex items-center">
@@ -109,7 +115,8 @@ export default function ClientLoginPage() {
         <div className="mt-16">
           <Image src="/logos/univation-white-logo.svg" alt="Univation" width={200} height={36} />
         </div>
-      </div>
+      </AnimatedGradient>
     </div>
   );
 }
+

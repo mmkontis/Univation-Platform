@@ -75,6 +75,12 @@
   }
 }
 
+@layer components {
+  .border-border {
+    border-color: theme('colors.border');
+  }
+}
+
 /* Chrome, Safari, Edge, Opera */
 input[type='search']::-webkit-search-cancel-button {
   -webkit-appearance: none;
@@ -90,3 +96,11 @@ input[type='search']::-moz-search-cancel-button {
 input[type='search']::-ms-clear {
   display: none;
 }
+
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset; /* Keeps the background normal */
+  border: 2px solid red; /* Applies a red border for autofilled inputs */
+}
+
+
+/* You can add custom styles here if needed */
