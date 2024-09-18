@@ -34,27 +34,29 @@ export const ClassTab: React.FC<ClassTabProps> = ({ formData, handleInputChange,
   const selectedClassSizes = formData.classSize || [];
 
   const classSizes = ["1-20", "21-50", "51-100", "101-500", "501+"];
+  const classLevelOptions = ['Bachelor', 'Master', 'PhD', 'Executive/Graduate'];
 
-  const handleClassSizeChange = (size: string) => {
-    const updatedSizes = selectedClassSizes.includes(size)
-      ? selectedClassSizes.filter(s => s !== size)
-      : [...selectedClassSizes, size];
-    handleInputChange({ target: { name: 'classSize', value: updatedSizes } } as any);
+  const handleTagSelection = (name: string, value: string) => {
+    const currentValues = formData[name as keyof typeof formData] as string[] || [];
+    const updatedValues = currentValues.includes(value)
+      ? currentValues.filter(v => v !== value)
+      : [...currentValues, value];
+    handleInputChange({ target: { name, value: updatedValues } } as any);
   };
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Your Profile on the Platform</h2>
-      <p className="text-sm text-gray-600">Perfect your Profile to attract better and busier Mentors.</p>
+      <h2 className="text-2xl font-semibold mb-4">Your Class Details</h2>
+      <p className="text-gray-600 mb-6">Provide information about your classes to help us match you with suitable mentors.</p>
 
-      <div>
+      <div className="space-y-1">
         <label className="block text-sm font-medium text-gray-700">Class Size</label>
         <div className="flex flex-wrap gap-2 mt-2">
           {classSizes.map((size) => (
             <button
               key={size}
               type="button"
-              onClick={() => handleClassSizeChange(size)}
+              onClick={() => handleTagSelection('classSize', size)}
               className={`px-3 py-1 rounded-md text-sm font-medium border ${
                 selectedClassSizes.includes(size)
                   ? 'bg-blue-100 text-blue-800 border-blue-300'
@@ -67,46 +69,34 @@ export const ClassTab: React.FC<ClassTabProps> = ({ formData, handleInputChange,
         </div>
       </div>
 
-      <div>
+      <div className="space-y-1">
         <label className="block text-sm font-medium text-gray-700">Class Levels</label>
-        <div className="space-y-2">
-          {['Bachelor', 'Master', 'PhD', 'Executive/Graduate'].map((level) => (
-            <div key={level} className="flex items-center">
-              <input
-                type="checkbox"
-                id={`level-${level}`}
-                name="classLevels"
-                value={level}
-                checked={classLevels.includes(level)}
-                onChange={(e) => {
-                  const updatedLevels = e.target.checked
-                    ? [...classLevels, level]
-                    : classLevels.filter(l => l !== level);
-                  handleInputChange({ target: { name: 'classLevels', value: updatedLevels } } as any);
-                }}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor={`level-${level}`} className="ml-2 block text-sm text-gray-900">
-                {level}
-              </label>
-            </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {classLevelOptions.map((level) => (
+            <button
+              key={level}
+              type="button"
+              onClick={() => handleTagSelection('classLevels', level)}
+              className={`px-3 py-1 rounded-md text-sm font-medium border ${
+                classLevels.includes(level)
+                  ? 'bg-blue-100 text-blue-800 border-blue-300'
+                  : 'bg-white text-gray-700 border-gray-300'
+              }`}
+            >
+              {level}
+            </button>
           ))}
         </div>
       </div>
 
-      <div>
+      <div className="space-y-1">
         <label className="block text-sm font-medium text-gray-700">Your Courses</label>
         <div className="flex flex-wrap gap-2 mt-2">
           {courses.map((course) => (
             <button
               key={course.id}
               type="button"
-              onClick={() => {
-                const updatedCourses = selectedCourses.includes(course.course_name)
-                  ? selectedCourses.filter(c => c !== course.course_name)
-                  : [...selectedCourses, course.course_name];
-                handleInputChange({ target: { name: 'courses', value: updatedCourses } } as any);
-              }}
+              onClick={() => handleTagSelection('courses', course.course_name)}
               className={`px-3 py-1 rounded-full text-sm font-medium border ${
                 selectedCourses.includes(course.course_name)
                   ? 'bg-blue-100 text-blue-800 border-blue-300'

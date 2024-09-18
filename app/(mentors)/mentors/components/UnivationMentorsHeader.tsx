@@ -1,7 +1,7 @@
 "use client";
 
 import { User } from '@/app/(dashboard)/components/user';
-import { ArrowTopRightOnSquareIcon, EnvelopeIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, QuestionMarkCircleIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './UnivationMentorsHeader.module.css';
@@ -12,9 +12,7 @@ interface UnivationMentorsHeaderProps {
 
 export default function UnivationMentorsHeader({ currentPath }: UnivationMentorsHeaderProps) {
   const getLinkClassName = (href: string) => {
-    const isActive = 
-      (href === '/mentors' && currentPath === '/mentors') ||
-      (href === '/mentors/profiles' && currentPath === '/mentors/profiles');
+    const isActive = currentPath.startsWith(href);
     return `text-[16px] font-semibold ${isActive ? 'text-[#121926] bg-[#F8FAFC]' : 'text-[#364152] hover:bg-[#F8FAFC]'} text-center leading-[1.5] px-3 py-2 rounded-md transition-colors`;
   };
 
@@ -30,10 +28,6 @@ export default function UnivationMentorsHeader({ currentPath }: UnivationMentors
             <Link href="/mentors/profiles" className={getLinkClassName('/mentors/profiles')}>Mentors</Link>
             <Link href="/mentors/professors" className={getLinkClassName('/mentors/professors')}>Professors</Link>
             <Link href="/mentors/events" className={getLinkClassName('/mentors/events')}>Events</Link>
-            <Link href="/mentors/platforms" target="_blank" rel="noopener noreferrer" className={`${getLinkClassName('/mentors/platforms')} flex items-center`}>
-              <ArrowTopRightOnSquareIcon className="w-5 h-5 mr-2" aria-hidden="true" />
-              All Platforms
-            </Link>
             <Link href="/mentors/control-panel" className={getLinkClassName('/mentors/control-panel')}>Control Panel</Link>
           </nav>
         </div>

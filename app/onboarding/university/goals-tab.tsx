@@ -41,12 +41,14 @@ export function GoalsTab({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold">Your Goals using the Platform</h2>
-      <p className="text-sm text-gray-600">Give us some feedback to provide you with the best experience!</p>
+      <div>
+        <h2 className="text-2xl font-semibold mb-4">Your Goals using the Platform</h2>
+        <p className="text-gray-600 mb-6">Give us some feedback to provide you with the best experience!</p>
+      </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+      <div className="space-y-6">
+        <div className="space-y-1">
+          <label className="text-sm font-medium">
             How many mentors or workshops would you like to be inviting?
           </label>
           <div className="bg-gray-100 p-4 rounded-md">
@@ -58,12 +60,12 @@ export function GoalsTab({
               onChange={(e) => setMentorsCount(parseInt(e.target.value))}
               className="w-full h-12 focus:outline-none focus:ring-0 hover:shadow-[0_0_0_0_rgba(0,0,0,0.15)]"
             />
-            <p className="text-sm text-gray-500 mt-1">At least {mentorsCount} per Semester</p>
+            <p className="text-xs text-gray-500 mt-1">At least {mentorsCount} per Semester</p>
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-1">
+          <label className="text-sm font-medium">
             What is your goal using the platform?
           </label>
           <div className="space-y-2">
@@ -87,11 +89,11 @@ export function GoalsTab({
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="space-y-1">
+          <label className="text-sm font-medium">
             Do you currently bring Mentors to your Lectures?
           </label>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 mt-1">
             {['Yes', 'No'].map((option) => (
               <label key={option} className="inline-flex items-center">
                 <input
@@ -109,50 +111,50 @@ export function GoalsTab({
                     setRadioSelected(option);
                   }}
                 />
-                <span className="ml-2">{option}</span>
+                <span className="ml-2 text-sm">{option}</span>
               </label>
             ))}
           </div>
         </div>
 
         {radioSelected === 'No' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">
               Why you don't bring mentors to your lectures?
             </label>
             <Textarea
               value={whyNotBringMentors}
               onChange={(e) => setWhyNotBringMentors(e.target.value)}
               placeholder='e.g. "It takes too much time to/ There is no need/..."'
-              className="w-full"
+              className="w-full mt-1"
             />
           </div>
         )}
 
         {radioSelected === 'No' && whyNotBringMentors.trim() !== '' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">
               How would you like us to invite mentors to your lectures?
             </label>
             <Textarea
               value={howToInvite}
               onChange={(e) => setHowToInvite(e.target.value)}
               placeholder="e.g. Provide a list of potential mentors, help with outreach..."
-              className="w-full"
+              className="w-full mt-1"
             />
           </div>
         )}
 
         {radioSelected === 'Yes' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+          <div className="space-y-1">
+            <label className="text-sm font-medium">
               What mentors have you invited?
             </label>
             <Textarea
               value={idealMentors}
               onChange={(e) => setIdealMentors(e.target.value)}
               placeholder="e.g. 1) Sam Altman, OpenAI's CEO, 2) Tim Cook, Apple's CEO..."
-              className="w-full"
+              className="w-full mt-1"
             />
           </div>
         )}

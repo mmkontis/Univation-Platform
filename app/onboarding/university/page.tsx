@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/MentorsPlatformButton';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
@@ -299,11 +299,15 @@ export default function OnboardingPage() {
     return `${(currentStepIndex + 1) / steps.length * 100}%`;
   };
 
+  if (step === 'done') {
+    return <DoneTab onDone={handleDone} />;
+  }
+
   return (
     <div className="min-h-screen flex bg-gray-10">
       <div className="w-1/2 p-8">
         <div className="mb-8 flex items-center">
-          <span className="text-sm text-gray-600">👋Welcome to Onboarding! Will take only 3 minutes.</span>
+          <span className="text-sm text-gray-600">👋Welcome to Onboarding | Univation</span>
         </div>
         
         <div className="mb-8 relative">
@@ -330,15 +334,14 @@ export default function OnboardingPage() {
 
         {renderStepContent()}
 
-        {step !== 'done' && (
-          <Button 
-            onClick={handleContinue}
-            className="mt-6 w-full bg-black text-white hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!isStepValid()}
-          >
-            Continue
-          </Button>
-        )}
+        <Button 
+          onClick={handleContinue}
+          className="mt-6 w-full justify-center"
+          variant="black"
+          disabled={!isStepValid()}
+        >
+          {step === 'profile' ? 'Complete Profile' : 'Continue'}
+        </Button>
       </div>
 
       <div className="w-1/2 univation-blue-background p-16 flex items-center justify-center">
@@ -349,6 +352,8 @@ export default function OnboardingPage() {
           universityName={formData.universityName}
           jobPosition={formData.jobPosition}
           profilePhoto={formData.profilePhoto ? URL.createObjectURL(formData.profilePhoto) : undefined}
+          shortBio={formData.shortBio}
+          selectedCourses={formData.courses}
         />
       </div>
     </div>

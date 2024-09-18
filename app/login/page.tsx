@@ -1,19 +1,20 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { useRouter } from 'next/navigation';
+import LoginForm from '@/components/LoginForm';
+import RegisterForm from '@/components/RegisterForm';
+import { loginPageContent } from '@/lib/pageContent';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
-import { User } from '@supabase/supabase-js';
-import { BlueButton } from '../components/BlueButton';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+type AccountType = 'mentor' | 'university' | 'company';
 
 export default function ClientLoginPage() {
-  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [showLogin, setShowLogin] = useState(true);
+  const [accountType, setAccountType] = useState<AccountType>('company');
   const router = useRouter();
   const supabase = createClientComponentClient();
 
@@ -38,62 +39,16 @@ export default function ClientLoginPage() {
     checkUser();
   }, [supabase, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email,
-      options: {
-        shouldCreateUser: true, // Change this to true to create a new user if they don't exist
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-    if (error) {
-      console.error('Error signing in with email:', error);
-      setIsLoading(false);
-    } else {
-      // Show a message to check email for OTP
-      alert('Please check your email for the login link.');
-      // Keep loading state active as user will be redirected once they use the email link
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setIsLoading(true);
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
-        },
-      },
-    });
-
-    if (error) {
-      console.error('Error signing in with Google:', error);
-      setIsLoading(false);
-    } else if (data) {
-      // The user will be redirected to Google for authentication
-      console.log('Redirecting to Google for authentication');
-    }
-  };
-
-  const handleLinkedInSignIn = async () => {
-    // Implement LinkedIn sign-in logic here
-    setIsLoading(true);
-    // ... LinkedIn sign-in code ...
-    // Don't forget to setIsLoading(false) if there's an error
-  };
-
   if (isLoading) {
     return <div>Loading...</div>; // Or a more sophisticated loading component
   }
 
+  const content = showLogin 
+    ? loginPageContent.login 
+    : loginPageContent.register[accountType];
+
   return (
     <div className="min-h-screen flex relative">
-      {/* Univation circle logo in upper left corner */}
       <div className="absolute top-4 left-4">
         <Image src="/logos/univation-circle-logo.svg" alt="Univation" width={40} height={40} />
       </div>
@@ -102,75 +57,37 @@ export default function ClientLoginPage() {
         <div className="mb-8">
         </div>
         <div className="flex-grow flex flex-col justify-center max-w-md mx-auto w-full">
-          <h2 className="text-xl font-semibold mb-6">Connect with university students in seconds.</h2>
-          <div className="space-y-4">
-            <BlueButton 
-              variant="default"
-              className="w-full h-12 text-black hover:bg-gray-100 bg-white pl-12" 
-              onClick={handleGoogleSignIn} 
-              disabled={isLoading}
-              leftIcon={<Image src="/logos/social-logos/google.svg" alt="Google" width={20} height={20} />}
-            >
-              Sign in with Google
-            </BlueButton>
-            <BlueButton 
-              variant="default"
-              className="w-full h-12 bg-[#0A66C2] text-white hover:bg-[#004182] pl-12" 
-              onClick={handleLinkedInSignIn} 
-              disabled={isLoading}
-              leftIcon={<Image src="/logos/social-logos/linkedin.svg" alt="LinkedIn" width={20} height={20} />}
-            >
-              Sign in with LinkedIn
-            </BlueButton>
-            
-            <div className="flex items-center justify-center">
-              <hr className="flex-grow border-t border-gray-300" />
-              <span className="px-4 text-sm text-gray-500">or</span>
-              <hr className="flex-grow border-t border-gray-300" />
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <Input 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-12 bg-gray-100 transition-shadow duration-200 ease-in-out hover:shadow-[0_0_0_4px_rgba(0,0,0,0.15)] focus:shadow-[0_0_0_4px_rgba(0,0,0,0.15)] border-none"
-                disabled={isLoading}
-              />
-              <BlueButton 
-                type="submit"
-                className="w-full mt-4"
-                variant="default"
-                size="default"
-                isUnclickable={isLoading || !email.trim()} // Use isUnclickable prop
-              >
-                Sign In
-              </BlueButton>
-            </form>
-            <p className="text-sm text-center mt-4">
-              Don't have an account? <Link href="/signup" className="text-blue-600 hover:underline">Sign up</Link>
-            </p>
-          </div>
+          {showLogin ? (
+            <LoginForm onToggleForm={() => setShowLogin(false)} />
+          ) : (
+            <RegisterForm 
+              onToggleForm={() => setShowLogin(true)} 
+              onAccountTypeChange={(type) => setAccountType(type || 'company')}
+            />
+          )}
         </div>
       </div>
-      <div className="w-1/2 text-white p-16 flex flex-col justify-center univation-blue-background" >
-        <h1 className="text-5xl font-bold mb-8">Attract the right talent, faster, smarter.</h1>
+      
+      <div className="w-1/2 text-white p-16 flex flex-col justify-center univation-blue-background relative" >
+        <h1 className="text-5xl font-bold mb-8">{content.title}</h1>
         <ul className="space-y-4 text-lg">
-          <li className="flex items-center">
-            <CheckCircleIcon className="w-7 h-7 mr-2 scale-125" />
-            #1 university platform for students
-          </li>
-          <li className="flex items-center">
-            <CheckCircleIcon className="w-7 h-7 mr-2 scale-125" />
-            35+ large companies hiring on Univation
-          </li>
-          <li className="flex items-center">
-            <CheckCircleIcon className="w-7 h-7 mr-2 scale-125" />
-            10x increased applications
-          </li>
+          {content.points.map((point, index) => (
+            <li key={index} className="flex items-center">
+              <CheckCircleIcon className="w-7 h-7 mr-2 scale-125" />
+              {point}
+            </li>
+          ))}
         </ul>
-        <div className="mt-16">
+        
+        {/* Updated "Trusted by" section with larger images */}
+        <div className="mt-8 flex items-center">
+          <Image alt="Avatar 1" src="https://tapback.co/api/avatar?name=John" width={48} height={48} className="rounded-full w-12 h-12 -ms-4 border-3 border-solid border-white" />
+          <Image alt="Avatar 2" src="https://tapback.co/api/avatar?name=Jane" width={48} height={48} className="rounded-full w-12 h-12 -ms-4 border-3 border-solid border-white" />
+          <Image alt="Avatar 3" src="https://tapback.co/api/avatar?name=Alex" width={48} height={48} className="rounded-full w-12 h-12 -ms-4 border-3 border-solid border-white" />
+          <span className="ml-4 text-lg font-bold tracking-tight text-slate-50">Trusted by more than 170K students</span>
+        </div>
+        
+        <div className="absolute bottom-8 right-8">
           <Image src="/logos/univation-white-logo.svg" alt="Univation" width={200} height={36} />
         </div>
       </div>

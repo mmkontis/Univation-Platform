@@ -1,5 +1,6 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 
 // Remove or comment out the Course import if it's not needed
@@ -48,6 +49,33 @@ type Course = {
   name: string;
   // ... other properties
 };
+
+const jobPositions = [
+  'Rector',
+  'Vice Rector',
+  'Dean',
+  'Professor',
+  'Associate Professor',
+  'Assistant Professor',
+  'Lecturer',
+  'Researcher',
+  'Administrator',
+  'Student Club Leader'
+].sort((a, b) => {
+  const order = [
+    'Rector',
+    'Vice Rector',
+    'Dean',
+    'Professor',
+    'Associate Professor',
+    'Assistant Professor',
+    'Lecturer',
+    'Researcher',
+    'Administrator',
+    'Student Club Leader'
+  ];
+  return order.indexOf(a) - order.indexOf(b);
+});
 
 export function BasicsTab({ formData, handleInputChange, onContinue }: BasicsTabProps) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -135,13 +163,24 @@ export function BasicsTab({ formData, handleInputChange, onContinue }: BasicsTab
             <Label htmlFor="jobPosition" className="block text-sm font-medium text-gray-700 mb-1">
               Job Position
             </Label>
-            <Input
+            <select
               id="jobPosition"
               name="jobPosition"
               value={formData.jobPosition}
               onChange={handleInputChange}
-              placeholder="Professor of Computer Science"
-            />
+              className={cn(
+                'flex h-10 w-full rounded-md bg-background px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 h-12 bg-gray-100 transition-shadow duration-200 ease-in-out hover:shadow-[0_0_0_4px_rgba(0,0,0,0.15)] focus:outline-none focus:ring-0',
+                'invalid:border-0 invalid:border-none invalid:shadow-[0_0_0_4px_rgba(239,68,68,0.5)]',
+                'appearance-none bg-gray-100'
+              )}
+            >
+              <option value="">Select a position</option>
+              {jobPositions.map((position) => (
+                <option key={position} value={position}>
+                  {position}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 

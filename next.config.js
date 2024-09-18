@@ -16,7 +16,10 @@ const nextConfig = {
       'randomuser.me',
       'mentors.univation.com',
       'lh3.googleusercontent.com',
-      'img.youtube.com'
+      'img.youtube.com',
+      'www.tapback.co',
+      '*.tapback.co',
+      'tapback.co'
       // Add your logo domain here if it's not locally stored
     ],
   },
